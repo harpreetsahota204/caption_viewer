@@ -168,16 +168,11 @@ class CaptionViewerPanel(foo.Panel):
             return text
         
         # Replace common escape sequences
-        # For markdown to properly render newlines, we need to handle them specially:
-        # - Double newlines (\\n\\n) should become paragraph breaks (two actual newlines)
-        # - Single newlines (\\n) should become line breaks (two spaces + newline for markdown)
+        # For markdown rendering in FiftyOne, we need to convert all \n to actual newlines
+        # The markdown renderer will handle the spacing
         
-        # First, handle double newlines (preserve them as paragraph breaks)
-        text = text.replace('\\n\\n', '\n\n')
-        
-        # Then, handle remaining single newlines (convert to markdown line breaks)
-        # In markdown, a line break requires two spaces followed by a newline
-        text = text.replace('\\n', '  \n')
+        # Strategy: Replace all \n with actual newlines, markdown will handle the rest
+        text = text.replace('\\n', '\n')
         
         # Handle other escape sequences
         text = text.replace('\\t', '\t')  # Convert \t to actual tab
@@ -261,8 +256,20 @@ class CaptionViewerPanel(foo.Panel):
                 # Process VLM output
                 processed_text = self._process_vlm_output(display_text)
                 
-                # Render processed text
-                panel.md(f"**Value**: \n\n{processed_text}")
+                # Check if this is formatted content (tables, JSON, etc.)
+                # These should use normal markdown rendering
+                is_formatted = (
+                    '```' in processed_text or  # Code blocks (JSON)
+                    '|' in processed_text and '---' in processed_text  # Markdown tables
+                )
+                
+                if is_formatted:
+                    # Use markdown for formatted content (tables, JSON, etc.)
+                    panel.md(f"\n\n{processed_text}")
+                else:
+                    # Use preformatted text block for plain text to preserve newlines
+                    # Wrap in triple backticks to preserve all formatting
+                    panel.md(f"\n\n```\n{processed_text}\n```")
                 
                 # Add character count metadata
                 panel.str(
