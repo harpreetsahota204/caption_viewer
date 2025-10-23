@@ -1,5 +1,8 @@
 # Caption Viewer - Intelligent VLM Output Viewer for FiftyOne
 
+![Caption Viewer Demo](nanonet_ocr.gif)
+
+
 > 📝 **Note**: This plugin is based on and inspired by the original [caption-viewer](https://github.com/mythrandire/caption-viewer) by [@mythrandire](https://github.com/mythrandire). This enhanced version adds intelligent content processing for Vision Language Model outputs.
 
 A FiftyOne plugin that intelligently displays and formats VLM (Vision Language Model) outputs and text fields. Perfect for viewing OCR results, receipt analysis, document processing, and any text-heavy computer vision workflows.
