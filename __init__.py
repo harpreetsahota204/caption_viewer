@@ -152,6 +152,22 @@ class CaptionViewerPanel(foo.Panel):
         # Convert HTML tables
         text = self._convert_html_tables_to_markdown(text)
         
+        # Process escape sequences (convert literal \n to actual newlines)
+        text = self._process_escape_sequences(text)
+        
+        return text
+    
+    def _process_escape_sequences(self, text):
+        """Convert literal escape sequences to actual characters"""
+        if not text:
+            return ""
+        
+        # Replace common escape sequences
+        # Only process if they appear to be literal escape sequences (not already newlines)
+        text = text.replace('\\n', '\n')  # Convert \n to actual newline
+        text = text.replace('\\t', '\t')  # Convert \t to actual tab
+        text = text.replace('\\r', '\r')  # Convert \r to carriage return
+        
         return text
 
     def on_load(self, ctx):
