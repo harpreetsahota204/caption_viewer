@@ -251,16 +251,15 @@ class CaptionViewerPanel(foo.Panel):
                 # Process VLM output
                 processed_text = self._process_vlm_output(display_text)
                 
-                # Check if already in code block or is a table
+                # Check if already in code block
                 is_code_block = processed_text.strip().startswith('```')
-                is_table = '|' in processed_text and '---' in processed_text
                 
-                if is_code_block or is_table:
-                    # Already formatted (JSON, tables), render as-is
+                if is_code_block:
+                    # Already formatted as JSON, render as-is
                     panel.md(f"\n\n{processed_text}")
                 else:
-                    # Plain text - convert newlines to markdown line breaks
-                    # In markdown, you need two spaces + newline to create a line break
+                    # Convert newlines to markdown line breaks for ALL content
+                    # (including mixed text + tables)
                     processed_text = processed_text.replace('\n', '  \n')
                     panel.md(f"\n\n{processed_text}")
                 
