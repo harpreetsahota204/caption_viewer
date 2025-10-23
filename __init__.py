@@ -162,9 +162,24 @@ class CaptionViewerPanel(foo.Panel):
         if not text:
             return ""
         
+        # Don't process escape sequences if the text is already in a code block
+        # Code blocks should preserve literal escape sequences
+        if text.strip().startswith('```') or '```' in text:
+            return text
+        
         # Replace common escape sequences
-        # Only process if they appear to be literal escape sequences (not already newlines)
-        text = text.replace('\\n', '\n')  # Convert \n to actual newline
+        # For markdown to properly render newlines, we need to handle them specially:
+        # - Double newlines (\\n\\n) should become paragraph breaks (two actual newlines)
+        # - Single newlines (\\n) should become line breaks (two spaces + newline for markdown)
+        
+        # First, handle double newlines (preserve them as paragraph breaks)
+        text = text.replace('\\n\\n', '\n\n')
+        
+        # Then, handle remaining single newlines (convert to markdown line breaks)
+        # In markdown, a line break requires two spaces followed by a newline
+        text = text.replace('\\n', '  \n')
+        
+        # Handle other escape sequences
         text = text.replace('\\t', '\t')  # Convert \t to actual tab
         text = text.replace('\\r', '\r')  # Convert \r to carriage return
         
