@@ -1,0 +1,8 @@
+name: "@harpreetsahota/caption-viewer"
+description: Intelligent VLM output viewer with HTML table conversion, JSON formatting, and security sanitization
+version: 1.0.0
+fiftyone:
+  version: ">=1.0.0"
+license: Apache 2.0
+panels:
+  - caption_viewer_panel
