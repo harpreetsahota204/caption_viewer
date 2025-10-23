@@ -6,16 +6,16 @@ A FiftyOne plugin that intelligently displays and formats VLM (Vision Language M
 
 ---
 
-## ✨ Features
+## Features
 
-### 🎯 Intelligent Content Processing
+### Intelligent Content Processing
 - **HTML Table Conversion** - Automatically converts HTML tables to beautiful markdown tables
 - **JSON Formatting** - Detects and pretty-prints JSON content in code blocks
 - **Escape Sequence Handling** - Properly renders newlines (`\n`) and tabs (`\t`) from VLM outputs
 - **Security Sanitization** - Removes potentially dangerous scripts and event handlers
 - **Plain Text Support** - Handles regular text fields seamlessly
 
-### 🚀 User Experience
+### User Experience
 - **Character Count** - Displays the length of the content
 - **Markdown Rendering** - Renders formatted markdown for optimal readability
 - **Empty State Handling** - Clear notices for empty or missing field values
@@ -24,7 +24,7 @@ A FiftyOne plugin that intelligently displays and formats VLM (Vision Language M
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 # Install from GitHub
@@ -39,9 +39,9 @@ fiftyone plugins download https://github.com/harpreetsahota204/caption-viewer --
 
 ---
 
-## 🎯 Use Cases
+## Use Cases
 
-### 📄 Receipt Processing with OCR/VLMs
+### Receipt Processing with OCR/VLMs
 
 Perfect for viewing receipt analysis outputs where the VLM extracts structured data with line breaks:
 
@@ -61,7 +61,7 @@ Item 2: $15.00
 Total: $25.00
 ```
 
-### 🏗️ Document Analysis with HTML Tables
+### Document Analysis with HTML Tables
 
 When VLMs output HTML tables (common for invoice/document parsing):
 
@@ -82,7 +82,7 @@ When VLMs output HTML tables (common for invoice/document parsing):
 | Muffin | 1 | $2.75 |
 ```
 
-### 📋 JSON Structured Data
+### JSON Structured Data
 
 Automatically formats JSON outputs from VLMs:
 
@@ -105,13 +105,13 @@ Automatically formats JSON outputs from VLMs:
 }
 ```
 
-### 💬 Captions and Annotations
+### Captions and Annotations
 
 Display any text field such as image captions, descriptions, or notes with proper formatting.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Example: OCR Receipt Dataset
 
@@ -178,7 +178,7 @@ The plugin automatically detects all `StringField` types in your dataset:
 
 ---
 
-## 🔧 Technical Details
+## Technical Details
 
 ### Processing Pipeline
 
@@ -206,7 +206,7 @@ The plugin automatically detects all `StringField` types in your dataset:
 
 ---
 
-## 🎓 Example Notebook
+## Example Notebook
 
 Check out the included `scratch.ipynb` for a complete working example:
 
@@ -226,36 +226,15 @@ session = fo.launch_app(dataset)
 
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
-- Report bugs or issues
-- Suggest new features
-- Submit pull requests
-- Share your use cases
-
----
-
-## 📜 License
+## License
 
 Apache 2.0
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Original plugin by [@mythrandire](https://github.com/mythrandire) - [caption-viewer](https://github.com/mythrandire/caption-viewer)
 - Built with [FiftyOne](https://github.com/voxel51/fiftyone) by Voxel51
 - Enhanced for VLM and OCR workflows
-
----
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/harpreetsahota204/caption-viewer/issues)
-- **FiftyOne Slack**: [Join the community](https://slack.voxel51.com/)
-- **Documentation**: [FiftyOne Plugins](https://docs.voxel51.com/plugins/)
-
----
-
-**Made with ❤️ for the computer vision community**
