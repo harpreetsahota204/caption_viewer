@@ -78,14 +78,10 @@ class CaptionViewerPanel(foo.Panel):
             allow_multiple=True,
         )
     
-    def _sanitize_content(self, text, max_length=50000):
+    def _sanitize_content(self, text):
         """Remove potentially dangerous content"""
         if not text:
             return ""
-        
-        # Truncate if too long
-        if len(text) > max_length:
-            text = text[:max_length] + "\n\n... (truncated)"
         
         # Remove script tags
         text = re.sub(
@@ -162,22 +158,21 @@ class CaptionViewerPanel(foo.Panel):
         if not text:
             return ""
         
-        # Don't process escape sequences if the text is already in a code block
-        # Code blocks should preserve literal escape sequences
-        if text.strip().startswith('```') or '```' in text:
+        # Don't process escape sequences if the text is already in a code block (JSON)
+        if text.strip().startswith('```'):
             return text
         
-        # Replace common escape sequences
-        # For markdown rendering in FiftyOne, we need to convert all \n to actual newlines
-        # The markdown renderer will handle the spacing
+        # Handle literal escape sequences (the string "\n" not actual newline)
+        # This handles cases where VLMs output literal "\n" in their text
+        if '\\n' in text:
+            text = text.replace('\\n', '\n')
+        if '\\t' in text:
+            text = text.replace('\\t', '\t')
+        if '\\r' in text:
+            text = text.replace('\\r', '\r')
         
-        # Strategy: Replace all \n with actual newlines, markdown will handle the rest
-        text = text.replace('\\n', '\n')
-        
-        # Handle other escape sequences
-        text = text.replace('\\t', '\t')  # Convert \t to actual tab
-        text = text.replace('\\r', '\r')  # Convert \r to carriage return
-        
+        # Text now has actual newlines (either from above or already present)
+        # The code block will preserve these
         return text
 
     def on_load(self, ctx):
@@ -256,20 +251,18 @@ class CaptionViewerPanel(foo.Panel):
                 # Process VLM output
                 processed_text = self._process_vlm_output(display_text)
                 
-                # Check if this is formatted content (tables, JSON, etc.)
-                # These should use normal markdown rendering
-                is_formatted = (
-                    '```' in processed_text or  # Code blocks (JSON)
-                    '|' in processed_text and '---' in processed_text  # Markdown tables
-                )
+                # Check if already in code block or is a table
+                is_code_block = processed_text.strip().startswith('```')
+                is_table = '|' in processed_text and '---' in processed_text
                 
-                if is_formatted:
-                    # Use markdown for formatted content (tables, JSON, etc.)
+                if is_code_block or is_table:
+                    # Already formatted (JSON, tables), render as-is
                     panel.md(f"\n\n{processed_text}")
                 else:
-                    # Use preformatted text block for plain text to preserve newlines
-                    # Wrap in triple backticks to preserve all formatting
-                    panel.md(f"\n\n```\n{processed_text}\n```")
+                    # Plain text - convert newlines to markdown line breaks
+                    # In markdown, you need two spaces + newline to create a line break
+                    processed_text = processed_text.replace('\n', '  \n')
+                    panel.md(f"\n\n{processed_text}")
                 
                 # Add character count metadata
                 panel.str(
