@@ -1,6 +1,6 @@
 # Caption Viewer - Intelligent VLM Output Viewer for FiftyOne
 
-![Caption Viewer Demo](nanonet_ocr.gif)
+![Caption Viewer Demo](https://raw.githubusercontent.com/harpreetsahota204/nanonets_ocr2/refs/heads/main/nanonet_ocr.gif)
 
 
 > 📝 **Note**: This plugin is based on and inspired by the original [caption-viewer](https://github.com/mythrandire/caption-viewer) by [@mythrandire](https://github.com/mythrandire). This enhanced version adds intelligent content processing for Vision Language Model outputs.
