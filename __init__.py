@@ -250,11 +250,13 @@ class CaptionViewerPanel(foo.Panel):
 
             if edit_mode:
                 # --- Edit Mode ---
+                # No on_change — let the framework sync the input value
+                # to ctx.panel.state.edit_text automatically, so re-renders
+                # don't fight the user's keystrokes.
                 panel.str(
                     "edit_text",
                     label=f"Editing: {selected_field}",
                     default=ctx.panel.state.get("edit_text", display_text),
-                    on_change=self.on_edit_text_change,
                 )
                 panel.btn(
                     "save_btn",
@@ -333,10 +335,6 @@ class CaptionViewerPanel(foo.Panel):
         display_text = ctx.panel.state.get("display_text", "")
         ctx.panel.state.edit_mode = True
         ctx.panel.state.edit_text = display_text
-
-    def on_edit_text_change(self, ctx):
-        """Track text changes as the user edits"""
-        ctx.panel.state.edit_text = ctx.params.get("value", "")
 
     def on_save_edit(self, ctx):
         """Save the edited caption back to the sample"""
