@@ -31,13 +31,13 @@ A FiftyOne plugin that intelligently displays and formats VLM (Vision Language M
 
 ```bash
 # Install from GitHub
-fiftyone plugins download https://github.com/harpreetsahota204/caption-viewer
+fiftyone plugins download https://github.com/harpreetsahota204/caption_viewer
 ```
 
 Or with `--overwrite` if updating:
 
 ```bash
-fiftyone plugins download https://github.com/harpreetsahota204/caption-viewer --overwrite
+fiftyone plugins download https://github.com/harpreetsahota204/caption_viewer --overwrite
 ```
 
 ---
