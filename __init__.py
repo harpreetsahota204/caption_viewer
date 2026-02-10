@@ -353,6 +353,9 @@ class CaptionViewerPanel(foo.Panel):
             ctx.panel.state.display_text = edited_text
             ctx.panel.state.edit_mode = False
             ctx.panel.state.edit_text = None
+
+            # Tell the App to refresh so sidebar/grid reflect the change
+            ctx.ops.reload_dataset()
         except Exception as e:
             print(f"Error saving field value: {e}")
 
