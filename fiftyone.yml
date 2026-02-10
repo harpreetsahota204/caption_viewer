@@ -1,5 +1,5 @@
 name: "@harpreetsahota/caption_viewer"
-description: Intelligent VLM output viewer with HTML table conversion, JSON formatting, and security sanitization
+description: "Intelligent VLM output viewer with HTML table conversion, JSON formatting, and security sanitization"
 url: "https://github.com/harpreetsahota204/caption_viewer"
 version: "1.0.0"
 fiftyone:
