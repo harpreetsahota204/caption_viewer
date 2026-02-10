@@ -244,10 +244,31 @@ class CaptionViewerPanel(foo.Panel):
                 on_change=self.on_field_select,
             )
             
-            # Get and process display text
+            # Get display text and edit mode state
             display_text = ctx.panel.state.get("display_text", "")
-            
-            if display_text:
+            edit_mode = ctx.panel.state.get("edit_mode", False)
+
+            if edit_mode:
+                # --- Edit Mode ---
+                panel.str(
+                    "edit_text",
+                    label=f"Editing: {selected_field}",
+                    default=ctx.panel.state.get("edit_text", display_text),
+                    on_change=self.on_edit_text_change,
+                )
+                panel.btn(
+                    "save_btn",
+                    label="Save",
+                    on_click=self.on_save_edit,
+                    variant="contained",
+                )
+                panel.btn(
+                    "cancel_btn",
+                    label="Cancel",
+                    on_click=self.on_cancel_edit,
+                )
+            elif display_text:
+                # --- View Mode ---
                 # Process VLM output
                 processed_text = self._process_vlm_output(display_text)
                 
@@ -263,6 +284,13 @@ class CaptionViewerPanel(foo.Panel):
                     processed_text = processed_text.replace('\n', '  \n')
                     panel.md(f"\n\n{processed_text}")
                 
+                # Edit button
+                panel.btn(
+                    "edit_btn",
+                    label="Edit Caption",
+                    on_click=self.on_edit_click,
+                )
+                
                 # Add character count metadata
                 panel.str(
                     "char_count",
@@ -275,6 +303,12 @@ class CaptionViewerPanel(foo.Panel):
                     label="No data",
                     description="This sample has no text in the selected field"
                 ))
+                # Allow adding a caption even when the field is empty
+                panel.btn(
+                    "edit_btn",
+                    label="Add Caption",
+                    on_click=self.on_edit_click,
+                )
 
         return types.Property(
             panel, view=types.GridView(height=100, width=100)
@@ -284,11 +318,50 @@ class CaptionViewerPanel(foo.Panel):
         field_name = ctx.params.get("value")
         ctx.panel.state.selected_field = field_name
         ctx.panel.set_title(f"Caption Viewer: {field_name}")
+        ctx.panel.state.edit_mode = False
+        ctx.panel.state.edit_text = None
 
         self.on_load(ctx)
 
     def on_change_current_sample(self, ctx):
+        ctx.panel.state.edit_mode = False
+        ctx.panel.state.edit_text = None
         self.on_load(ctx)
+
+    def on_edit_click(self, ctx):
+        """Enter edit mode with the current display text"""
+        display_text = ctx.panel.state.get("display_text", "")
+        ctx.panel.state.edit_mode = True
+        ctx.panel.state.edit_text = display_text
+
+    def on_edit_text_change(self, ctx):
+        """Track text changes as the user edits"""
+        ctx.panel.state.edit_text = ctx.params.get("value", "")
+
+    def on_save_edit(self, ctx):
+        """Save the edited caption back to the sample"""
+        sample_id = ctx.current_sample
+        selected_field = ctx.panel.state.selected_field
+        edited_text = ctx.panel.state.get("edit_text", "")
+
+        if not sample_id or not selected_field:
+            return
+
+        try:
+            sample = ctx.dataset[sample_id]
+            sample[selected_field] = edited_text
+            sample.save()
+
+            ctx.panel.state.display_text = edited_text
+            ctx.panel.state.edit_mode = False
+            ctx.panel.state.edit_text = None
+        except Exception as e:
+            print(f"Error saving field value: {e}")
+
+    def on_cancel_edit(self, ctx):
+        """Discard edits and return to view mode"""
+        ctx.panel.state.edit_mode = False
+        ctx.panel.state.edit_text = None
 
 
 def _get_string_fields(ctx):
